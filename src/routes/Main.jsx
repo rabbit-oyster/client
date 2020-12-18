@@ -1,10 +1,12 @@
 import React from 'react'
-import { Container } from 'reactstrap'
+import { Container, Col, Row } from 'reactstrap'
 
 export default function Main () {
   return (
     <Container>
-      메인메인메인
+      <Row>
+        <Col>.col</Col>
+      </Row>
     </Container>
   )
 }
