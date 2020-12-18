@@ -1,28 +1,28 @@
 class Logger {
   static debug (messages) {
     console.log(
-      `%c${messages}`,
+      `%c[DEBUG] ${messages}`,
       'color:cyan;'
     )
   }
 
   static error (messages) {
     console.log(
-      `%c${messages}`,
+      `%c[ERROR] ${messages}`,
       'color:red;'
     )
   }
 
   static info (messages) {
     console.log(
-      `%c${messages}`,
+      `%c[INFO] ${messages}`,
       'color:green;'
     )
   }
 
   static warn (messages) {
     console.log(
-      `%c${messages}`,
+      `%c[WARN] ${messages}`,
       'color:yellow;'
     )
   }
