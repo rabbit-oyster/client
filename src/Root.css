@@ -1,3 +1,25 @@
-.messageList {
+li {
   list-style-type: none
+}
+
+input.chat {
+  position: fixed;
+  bottom: 0;
+}
+
+.example-1 {
+  background: url("https://cdn.discordapp.com/attachments/745844596176715806/789417627718123560/unknown.png");
+}
+
+.Message.right .Bubble {
+  background-color: #0084ff;
+  color: white;
+}
+
+.Message.left .Bubble {
+  background-color: #eee;
+}
+
+.Bubble {
+  padding: 7px 20px;
 }
