@@ -1,12 +1,9 @@
 import React from 'react'
-import { Container, Col, Row } from 'reactstrap'
+import { Card, CardImg, Container, Col, Row } from 'reactstrap'
+import styled from 'styled-components'
 
 export default function Main () {
   return (
-    <Container>
-      <Row>
-        <Col>.col</Col>
-      </Row>
-    </Container>
+    
   )
 }

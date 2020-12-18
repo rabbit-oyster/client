@@ -2,15 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Message from './Message'
-
+import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 function MessageList ({ children }) {
-  const List = styled.li`
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  `
   return (
-    <List>
+    <li className='messageList'>
       {
         children && (
           React.Children.map(children, (child, i) => {
@@ -30,7 +25,7 @@ function MessageList ({ children }) {
           )
         )
       }
-    </List>
+    </li>
   )
 }
 
