@@ -37,7 +37,7 @@ function Chats () {
     <>
       <Chat
         placeholder='메세지를 입력해주세요.'
-        navbar={{ title: 'Sex' }}
+        navbar={{ title: '상담' }}
         messages={messages}
         renderMessageContent={renderMessageContent}
         onSend={handleSend}
