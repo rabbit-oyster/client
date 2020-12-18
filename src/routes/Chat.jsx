@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Button, Input, InputGroup, InputGroupAddon } from 'reactstrap'
+import { Container, Button, Input, InputGroupAddon } from 'semantic-ui-react'
 import Message from '../components/Message'
 import MessageList from '../components/MessageList'
 
@@ -26,12 +26,18 @@ export default function Chat () {
       <MessageList>
         {chats.map((el, i) => (<Message key={i} self={el.self}>{el.content}</Message>))}
       </MessageList>
-      <InputGroup className=''>
-        <Input placeholder='이야기를 해보세요.' size='lg' onKeyDown={handleKeydown} value={userInput} onChange={handleChange} />
-        <InputGroupAddon addonType='append'>
-          <Button color='success' onClick={handleSubmit}>전송</Button>
-        </InputGroupAddon>
-      </InputGroup>
+      <Input size='large' onKeyDown={handleKeydown} value={userInput} onChange={handleChange} placeholder='이야기를 해보세요.' />
     </Container>
+    // <Container>
+    //   <MessageList>
+    //     {chats.map((el, i) => (<Message key={i} self={el.self}>{el.content}</Message>))}
+    //   </MessageList>
+    //   <InputGroup className=''>
+    //     <Input placeholder='이야기를 해보세요.' size='lg' onKeyDown={handleKeydown} value={userInput} onChange={handleChange} />
+    //     <InputGroupAddon addonType='append'>
+    //       <Button color='success' onClick={handleSubmit}>전송</Button>
+    //     </InputGroupAddon>
+    //   </InputGroup>
+    // </Container>
   )
 }

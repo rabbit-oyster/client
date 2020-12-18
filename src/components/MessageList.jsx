@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import Message from './Message'
-import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 function MessageList ({ children }) {
   return (
     <li className='messageList'>

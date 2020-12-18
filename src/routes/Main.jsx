@@ -1,9 +1,10 @@
 import React from 'react'
-import { Card, CardImg, Container, Col, Row } from 'reactstrap'
-import styled from 'styled-components'
+import { Container } from 'semantic-ui-react'
 
 export default function Main () {
   return (
-    
+    <Container>
+      <h1>ASDF</h1>
+    </Container>
   )
 }
