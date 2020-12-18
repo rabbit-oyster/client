@@ -1,21 +1,30 @@
 class Logger {
   static debug (messages) {
     console.log(
-      `%c${messages}`, // 뭐 봐야하는데 오류떠서 (s) 추가해둠
+      `%c${messages}`,
       'color:cyan;'
     )
   }
 
-  static error () {
-
+  static error (messages) {
+    console.log(
+      `%c${messages}`,
+      'color:red;'
+    )
   }
 
-  static info () {
-
+  static info (messages) {
+    console.log(
+      `%c${messages}`,
+      'color:green;'
+    )
   }
 
-  static http () {
-
+  static warn (messages) {
+    console.log(
+      `%c${messages}`,
+      'color:yellow;'
+    )
   }
 }
 
