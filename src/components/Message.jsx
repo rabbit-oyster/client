@@ -23,6 +23,7 @@ const MessageBox = styled.li`
   background: ${props => props.self ? '#0084ff' : '#eee'};
   color: ${props => props.self ? '#fff' : 'black'};
   float: ${props => props.self ? 'right' : 'left'};
+  text-align: ${props => props.self ? 'right' : 'left'};
   .animation-enter {
     opacity: 0.01;
   }
