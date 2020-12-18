@@ -5,7 +5,7 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: ['standard', 'standard-react', 'standard-jsx'],
+  extends: ['standard', 'standard-react', 'standard-jsx', 'plugin:react/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
@@ -15,6 +15,8 @@ module.exports = {
     ecmaVersion: 2021
   },
   rules: {
+    'react/jsx-uses-vars': 'warn',
+    'no-unused-vars': 'warn',
     indent: [
       'error',
       2,
