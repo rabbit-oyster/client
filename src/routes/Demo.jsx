@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container } from 'reactstrap'
+import { Container } from 'semantic-ui-react'
 
 import Message from '../components/Message'
 import MessageList from '../components/MessageList'
