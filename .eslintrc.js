@@ -5,7 +5,7 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: ['standard', 'standard-react', 'standard-jsx', 'plugin:react/recommended'],
+  extends: ['standard', 'plugin:react/recommended', 'standard-react', 'standard-jsx'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
