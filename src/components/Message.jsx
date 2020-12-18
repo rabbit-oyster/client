@@ -11,13 +11,14 @@ const SelfborderRadiusSet = {
 const BotborderRadiusSet = {
   solo: '30px',
   first: '30px 30px 30px 5px',
-  middle: '5px 30px 5px 30px',
+  middle: '5px 30px 30px 5px',
   last: '5px 30px 30px 30px'
 }
-const MessageBox = styled.ul`
+const MessageBox = styled.li`
   display: inlone-block;
   clear: both;
   padding: 15px;
+  
   border-radius: ${props => props.self ? SelfborderRadiusSet[props.type] : BotborderRadiusSet[props.type]};
   margin-bottom: 1px;
   background: ${props => props.self ? '#0084ff' : '#eee'};

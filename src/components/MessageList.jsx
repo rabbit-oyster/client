@@ -1,18 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Message from './Message'
-function MessageList ({ children }) {
+function MessageList (props) {
   return (
-    <li className='messageList'>
+    <ul className='messageList' {...props}>
       {
-        children && (
-          React.Children.map(children, (child, i) => {
+        props.children && (
+          React.Children.map(props.children, (child, i) => {
             let type
-            if (!children[i - 1] && !children[i + 1]) type = 'solo'
-            else if (children[i - 1] && children[i - 1].props.self === child.props.self) {
-              if (children[i + 1] && (children[i + 1].props.self === child.props.self)) type = 'middle'
+            if (!props.children[i - 1] && !props.children[i + 1]) type = 'solo'
+            else if (props.children[i - 1] && props.children[i - 1].props.self === child.props.self) {
+              if (props.children[i + 1] && (props.children[i + 1].props.self === child.props.self)) type = 'middle'
               else type = 'last'
-            } else if (children[i + 1] && children[i + 1].props.self === child.props.self) type = 'first'
+            } else if (props.children[i + 1] && props.children[i + 1].props.self === child.props.self) type = 'first'
             else type = 'solo'
             return (
               React.cloneElement(child, {
@@ -23,7 +23,7 @@ function MessageList ({ children }) {
           )
         )
       }
-    </li>
+    </ul>
   )
 }
 
