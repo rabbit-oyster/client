@@ -1,43 +1,53 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
-import { Container, Button, Input, InputGroupAddon } from 'semantic-ui-react'
-import Message from '../components/Message'
-import MessageList from '../components/MessageList'
+import Chat, { Bubble, useMessages } from '@chatui/core'
+import styled from 'styled-components'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import ChineseCSS from '!!raw-loader!@chatui/core/dist/index.css'
 
-export default function Chat () {
-  const [userInput, setInput] = useState('')
-  const [chats, setChats] = useState([])
-  function addChat (chat) {
-    setChats(oldChats => [...oldChats, chat])
+// Your code stuff...
+
+function Chats () {
+  function handleSend (type, val) {
+    if (type === 'text' && val.trim()) {
+      appendMsg({
+        type: 'text',
+        content: { text: val },
+        position: 'right'
+      })
+
+      setTyping(true)
+
+      setTimeout(() => {
+        appendMsg({
+          type: 'text',
+          content: { text: 'Bala bala' }
+        })
+      }, 1000)
+    }
   }
 
-  function handleKeydown (e) {
-    if (e.key === 'Enter') return handleSubmit()
+  function renderMessageContent (msg) {
+    const { type, position, content } = msg
+    return <Bubble content={content.text} style={{ backgroundColor: position === 'right' ? '#0084ff' : '#eee' }} />
   }
-  function handleSubmit () {
-    addChat({ content: userInput, self: true })
-    setInput('')
-  }
-
-  function handleChange (e) {
-    setInput(e.target.value)
-  }
+  const { messages, appendMsg, setTyping } = useMessages([])
+  console.log(ChineseCSS)
   return (
-    <Container>
-      <MessageList>
-        {chats.map((el, i) => (<Message key={i} self={el.self}>{el.content}</Message>))}
-      </MessageList>
-      <Input size='large' onKeyDown={handleKeydown} value={userInput} onChange={handleChange} placeholder='이야기를 해보세요.' />
-    </Container>
-    // <Container>
-    //   <MessageList>
-    //     {chats.map((el, i) => (<Message key={i} self={el.self}>{el.content}</Message>))}
-    //   </MessageList>
-    //   <InputGroup className=''>
-    //     <Input placeholder='이야기를 해보세요.' size='lg' onKeyDown={handleKeydown} value={userInput} onChange={handleChange} />
-    //     <InputGroupAddon addonType='append'>
-    //       <Button color='success' onClick={handleSubmit}>전송</Button>
-    //     </InputGroupAddon>
-    //   </InputGroup>
-    // </Container>
+    <>
+      <Chat
+        placeholder='메세지를 입력해주세요.'
+        navbar={{ title: 'Sex' }}
+        messages={messages}
+        renderMessageContent={renderMessageContent}
+        onSend={handleSend}
+      />
+      <style>
+        {ChineseCSS}
+      </style>
+    </>
+
   )
 }
+
+export default Chats
