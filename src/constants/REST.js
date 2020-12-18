@@ -4,8 +4,9 @@ class REST {
   constructor () {
     this.serverURL = BASE_URL
   }
-  sendMessage () {
-      
+  
+  getToken () {
+
   }
 }
 export default REST
