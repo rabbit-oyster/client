@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Snowpack Build
+    name: CRA Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
