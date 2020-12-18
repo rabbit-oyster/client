@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
-function Loading ({ loading, children }) {
+function Loading ({ text, loading, children }) {
   return (
     <>
       {
@@ -10,7 +10,7 @@ function Loading ({ loading, children }) {
           ? (
             <>
               <Dimmer active={loading} style={{ opacity: 0.4 }}>
-                <Loader />
+                <Loader content={text || '로딩중'} />
               </Dimmer>
             </>
           )
@@ -21,6 +21,7 @@ function Loading ({ loading, children }) {
 }
 
 Loading.propTypes = {
+  text: PropTypes.string,
   loading: PropTypes.bool,
   children: PropTypes.element
 }
