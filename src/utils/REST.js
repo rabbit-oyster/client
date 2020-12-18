@@ -6,8 +6,16 @@ class REST {
     this.serverURL = BASE_URL
   }
 
-  getHospitalData (lat, long, type) { // 0 = 건강증진, 1 = 정신건강 노잼
-    fetch(BASE_URL + '/api/nearest', { method: 'POST', body: JSON.stringify({ Pos: [lat, long], type: types[type] }) })
+  async fetchRoomID (score, totalScore, timeout = 30) {
+    const res = await fetch(BASE_URL + '/1', { method: 'POST', body: JSON.stringify({ Score: score, TotalScore: totalScore, timeout }), headers: { 'content-type': 'application/json' } })
+
+    return await res.text()
+  }
+
+  async getHospitalData (lat, long, type) { // 0 = 건강증진, 1 = 정신건강 노잼
+    const res = await fetch(BASE_URL + '/api/nearest', { method: 'POST', body: JSON.stringify({ Pos: [lat, long], type: types[type] }), headers: { 'content-type': 'application/json' } })
+
+    return await res.json()
   }
 }
 export default REST
