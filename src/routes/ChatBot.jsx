@@ -4,22 +4,27 @@ import React, { useState, useEffect } from 'react'
 import REST, { baseURL } from '../utils/REST'
 import Logger from '../utils/Logger'
 import Chat, { Flex, FlexItem, Notice, Bubble, useMessages, toast } from '@chatui/core'
-import { Message, Icon } from 'semantic-ui-react'
+import { Image } from 'semantic-ui-react'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import ChineseCSS from '!!raw-loader!@chatui/core/dist/index.css'
 import Loading from '../components/Loading'
 import io from 'socket.io-client'
-
+import Iframe from 'react-iframe'
+import styled from 'styled-components'
+const bubbleClass = styled.div`
+width: 512vh;
+height: 256vh;
+`
 export default function Chats () {
   const [isAwaitMessage, setAwaitMessage] = useState(true)
   const [isReconnect, setReconnect] = useState(false)
   const [isWaitForNext, setWaitForNext] = useState(false)
   const [isLoading, setLoading] = useState(true)
+  const [isDisconnected, setDisconnected] = useState(true)
   const [socket, setSocket] = useState(false)
   const { messages, appendMsg, setTyping, deleteMsg } = useMessages([])
   localStorage.debug = '*'
   useEffect(() => {
-    setReconnect(false)
     const socketConn = io(baseURL + '/chatBot')
     socketConn.io.on('reconnect', () => {
       setReconnect(true)
@@ -30,20 +35,31 @@ export default function Chats () {
       Logger.info(`[Socket.IO] [connect] Socket Connected ${baseURL}`)
       setSocket(socketConn)
       setLoading(false)
-      setAwaitMessage(true)
       setReconnect(false)
+      setDisconnected(false)
+      setAwaitMessage(true)
       toast.success('서버와 연결되었습니다 :3')
     })
     socketConn.on('disconnect', () => {
+      setDisconnected(true)
+      socketConn.disconnect()
       Logger.warn(`[Socket.IO] [disconnect] Socket Disconnected ${baseURL}`)
     })
     socketConn.on('returnResult', (data) => {
       setAwaitMessage(true)
+      if (Math.round(data.score / data.totalScore) <= 60) {
       appendMsg({
         type: 'iframe',
-        content: { src: 'https://www.youtube.com/embed/p8vu2j-oVZA' },
+        content: { src: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBvTF_bDgOnVNtK52d0B5hLm3_idAFRO3U&q=청와대', text: '현재 마음이 우울하신거 같네요. 근처에 상담하실 수 있는 기관을 보여드릴게요.' },
         position: 'left'
       })
+} else {
+  appendMsg({
+    type: 'img',
+    content: { src: '/cat.png', text: '현재 마음이 편안하신 상태인거 같아요! 언제든지 고민이 생긴다면 주저하지마시고 저를 찾아주세요.' },
+    position: 'left'
+  })
+}
     })
     socketConn.on('botMessage', (data) => {
       Logger.debug(`[Socket.IO] [botMessage] appendMsg(${data.content})`)
@@ -86,20 +102,33 @@ export default function Chats () {
   }
   function renderMessageContent (msg) {
     const { type, position, content } = msg
-    // 빨리 수정점요 ^^아 ㅇㅋ
     switch (type) {
       case 'text':
         return <Bubble content={content.text} style={{ backgroundColor: position === 'right' ? '#0084ff' : '#eee' }} />
       case 'iframe':
         return (
-          <Bubble style={{ overflow: 'hidden', width: '100vh', height: '100vh' }}>
-            <iframe src={content.src} style={{ position: 'relative', height: '100%', width: '100%' }} />
+          <Bubble class={bubbleClass}>
+            {content.text || ''}
+            <Iframe url={content.src} frameBorder='0' width='530vh' height='270vh' />
           </Bubble>
-)
+        )
+      case 'img':
+        return (
+          <Bubble class={bubbleClass}>
+            {content.text || ''}
+            <Image src={content.src} style={{ width: '100%' }} />
+          </Bubble>
+        )
     }
   }
   /* eslint-disable react/jsx-indent */
   return (
+<> {
+    isDisconnected
+    ? (
+      <Loading loading text='연결 끊김...' />
+      )
+    : (
     <>
       {
         isReconnect
@@ -121,6 +150,10 @@ export default function Chats () {
             </style>
             </Loading>
       }
+    )
     </>
   )
+}
+</>
+)
 }

@@ -4,19 +4,18 @@ import Chat, { Bubble, useMessages, toast } from '@chatui/core'
 import styled from 'styled-components'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import ChineseCSS from '!!raw-loader!@chatui/core/dist/index.css'
-import { baseURL } from '../utils/REST'
+import REST, { baseURL } from '../utils/REST'
 import io from 'socket.io-client'
 import Logger from '../utils/Logger'
 import Loading from '../components/Loading'
 
-// Your code stuff...
-
+const rest = new REST()
 export default function Chats () {
   const [state, setState] = useState(0) // 0: Loading | 1: Ready | 2: Errored | 3: sending request | 4: Start
   const [reconnecting, setReconnection] = useState(false)
   const [data, setData] = useState(null)
   const [socket, setSocket] = useState(null)
-
+  console.log(rest.fetchRoomID(60, 70).then(r => r))
   useEffect(() => {
     const socketConn = io(baseURL + '/chat')
     socketConn.on('connect', () => {
@@ -27,15 +26,26 @@ export default function Chats () {
       socketConn.emit('setRoom', { roomId: '6974' })
       toast.success('서버와 연결되었습니다 :>')
     })
+    socketConn.on('userMessage', (data) => {
+      try {
+        const j = JSON.parse(data.content)
+        if (j.hello) setState(4)
+      } catch {
+        appendMsg({
+          type: 'text',
+          content: { text: data.content },
+          position: 'left'
+        })
+      }
+    })
     socketConn.on('userJoined', (data) => {
-      console.log(data)
       Logger.debug('[Socket.IO] [userJoined] the User have joined.')
       toast.success('유저가 입장했습니다.')
       setState(4)
     })
     socketConn.on('messageDenied', (data) => {
       Logger.debug(`[Socket.IO] [messageDenied] messageDenied ${data.content}`)
-      toast.fail('메세지 내용에 비속어가 담겨있어 전송이 취소되었어요.')
+      toast.fail('메세지 내용에 비속어가 포함되어 있어 전송이 취소되었어요.')
     })
     socketConn.on('messageAccepted', (data) => {
       Logger.debug(`[Socket.IO] [messageAccepted] appendMsg(${data.content})`)
@@ -53,7 +63,7 @@ export default function Chats () {
   function handleSend (type, content) {
     content = content.trim()
     if (content.length <= 0) return
-    if (content.length <= 4) return toast.fail('보낼 메세지의 길이는 4글자 이상이여야 해요.')
+    if (content.length >= 2000) return toast.fail('2000자 이상 메세지는 전송하실 수 없습니다')
     if (state === 3) return
     Logger.debug(`[Chat] Message Typed ${content} Type: ${type}`)
     if (type !== 'text') return Logger.warn('[Chat] UnSupported Message Type')
