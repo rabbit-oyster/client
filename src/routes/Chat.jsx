@@ -13,7 +13,6 @@ const rest = new REST()
 export default function Chats () {
   const [state, setState] = useState(0) // 0: Loading | 1: Ready | 2: Errored | 3: sending request | 4: Start
   const [reconnecting, setReconnection] = useState(false)
-  const [data, setData] = useState(null)
   const [socket, setSocket] = useState(null)
   console.log(rest.fetchRoomID(60, 70).then(r => r))
   useEffect(() => {
