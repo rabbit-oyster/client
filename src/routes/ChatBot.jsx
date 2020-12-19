@@ -1,4 +1,4 @@
-/* eslint-disable indent */
+/* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import REST, { baseURL } from '../utils/REST'
@@ -11,6 +11,8 @@ import Loading from '../components/Loading'
 import io from 'socket.io-client'
 import Iframe from 'react-iframe'
 import styled from 'styled-components'
+import { usePosition } from '../components/usePosition.jsx'
+const rest = new REST()
 const bubbleClass = styled.div`
 width: 512vh;
 height: 256vh;
@@ -23,8 +25,11 @@ export default function Chats () {
   const [isDisconnected, setDisconnected] = useState(true)
   const [socket, setSocket] = useState(false)
   const { messages, appendMsg, setTyping, deleteMsg } = useMessages([])
+  const { latitude, longitude, error } = usePosition()
+  let infos = { }
   localStorage.debug = '*'
   useEffect(() => {
+    infos = { latitude, longitude, error }
     const socketConn = io(baseURL + '/chatBot')
     socketConn.io.on('reconnect', () => {
       setReconnect(true)
@@ -45,21 +50,38 @@ export default function Chats () {
       socketConn.disconnect()
       Logger.warn(`[Socket.IO] [disconnect] Socket Disconnected ${baseURL}`)
     })
-    socketConn.on('returnResult', (data) => {
+    socketConn.on('returnResult', async (data) => {
       setAwaitMessage(true)
+
       if (Math.round(data.score / data.totalScore) <= 60) {
-      appendMsg({
-        type: 'iframe',
-        content: { src: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBvTF_bDgOnVNtK52d0B5hLm3_idAFRO3U&q=청와대', text: '현재 마음이 우울하신거 같네요. 근처에 상담하실 수 있는 기관을 보여드릴게요.' },
-        position: 'left'
-      })
-} else {
-  appendMsg({
-    type: 'img',
-    content: { src: '/cat.png', text: '현재 마음이 편안하신 상태인거 같아요! 언제든지 고민이 생긴다면 주저하지마시고 저를 찾아주세요.' },
-    position: 'left'
-  })
-}
+        console.log(infos)
+        if (!error && infos.latitude && infos.longitude) {
+          const near = await rest.getHospitalData(infos.latitude, infos.longitude, 0)
+          console.log(near)
+          appendMsg({
+            type: 'iframe',
+            content: {
+              src: `https://www.google.com/maps/embed/v1/place?key=AIzaSyBvTF_bDgOnVNtK52d0B5hLm3_idAFRO3U&q=${data['관리기관명']}`,
+              text: '현재 마음이 우울하신거 같네요. 근처에 상담하실 수 있는 기관을 보여드릴게요.'
+            },
+            position: 'left'
+          })
+        } else {
+          appendMsg({
+            type: 'text',
+            content: {
+              text: '현재 마음이 우울하신거 같네요. 근처에 있는 기관에서 상담 받아보시는걸 추천드려요..!'
+            },
+            position: 'left'
+          })
+        }
+      } else {
+        appendMsg({
+          type: 'img',
+          content: { src: '/cat.png', text: '현재 마음이 편안하신 상태인거 같아요! 언제든지 고민이 생긴다면 주저하지마시고 저를 찾아주세요.' },
+          position: 'left'
+        })
+      }
     })
     socketConn.on('botMessage', (data) => {
       Logger.debug(`[Socket.IO] [botMessage] appendMsg(${data.content})`)
@@ -123,37 +145,37 @@ export default function Chats () {
   }
   /* eslint-disable react/jsx-indent */
   return (
-<> {
-    isDisconnected
-    ? (
-      <Loading loading text='연결 끊김...' />
-      )
-    : (
-    <>
-      {
-        isReconnect
-          ? (
-            <>
-            <Loading loading text='재접속 중...' />
-            </>
-          )
-          : <Loading loading={isLoading}>
-            <Chat
-              navbar={{ title: 'CHAT' }}
-              messages={messages}
-              renderMessageContent={renderMessageContent}
-              onSend={handleSend}
-              placeholder='메세지를 입력해주세요.'
-            />
-            <style>
-              {ChineseCSS}
-            </style>
-            </Loading>
-      }
+    <> {
+      isDisconnected
+        ? (
+          <Loading loading text='연결 끊김...' />
+        )
+        : (
+          <>
+            {
+              isReconnect
+                ? (
+                  <>
+                    <Loading loading text='재접속 중...' />
+                  </>
+                )
+                : <Loading loading={isLoading}>
+                  <Chat
+                    navbar={{ title: 'CHAT' }}
+                    messages={messages}
+                    renderMessageContent={renderMessageContent}
+                    onSend={handleSend}
+                    placeholder='메세지를 입력해주세요.'
+                  />
+                  <style>
+                    {ChineseCSS}
+                  </style>
+                </Loading>
+            }
     )
+          </>
+        )
+    }
     </>
   )
-}
-</>
-)
 }

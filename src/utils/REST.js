@@ -1,5 +1,5 @@
 import path from 'path'
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = 'http://maryst.iptime.org:5000'
 const types = ['전국건강증진센터표준데이터', '정신건강관련전체기관정보']
 class REST {
   constructor () {
@@ -12,8 +12,8 @@ class REST {
     return await res.text()
   }
 
-  async getHospitalData (lat, long, type) { // 0 = 건강증진, 1 = 정신건강 노잼
-    const res = await fetch(BASE_URL + '/api/nearest', { method: 'POST', body: JSON.stringify({ Pos: [lat, long], type: types[type] }), headers: { 'content-type': 'application/json' } })
+  async getHospitalData (lat, long, type) { // 0 = 건강증진, 1 = 정신건강
+    const res = await fetch(BASE_URL + '/nearest', { method: 'POST', body: this.formData({ Pos: `${lat}, ${long}`, type: types[type] }), headers: { 'content-type': 'application/x-www-form-urlencoded' } })
 
     return await res.json()
   }
