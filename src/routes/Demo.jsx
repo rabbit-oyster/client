@@ -3,9 +3,14 @@ import { Container } from 'semantic-ui-react'
 
 import Message from '../components/Message'
 import MessageList from '../components/MessageList'
+import { usePosition } from '../components/usePosition.jsx'
 export default function Demo () {
+  const { latitude, longitude, error } = usePosition()
+
+  const gg = latitude
   return (
     <Container>
+      {gg}
       <br /><br />
       <MessageList>
         <Message>안녕하세요 반갑습니다 ㅎㅎ</Message>
