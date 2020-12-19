@@ -7,7 +7,7 @@ class REST {
   }
 
   async fetchRoomID (score, totalScore, timeout = 30) {
-    const res = await fetch(BASE_URL + '/1', { method: 'POST', body: JSON.stringify({ Score: score, TotalScore: totalScore, timeout }), headers: { 'content-type': 'application/json' } })
+    const res = await fetch(BASE_URL + '/1', { method: 'POST', body: this.formData({ Score: score, TotalScore: totalScore, timeout }), headers: { 'content-type': 'application/x-www-form-urlencoded' } })
 
     return await res.text()
   }
@@ -16,6 +16,16 @@ class REST {
     const res = await fetch(BASE_URL + '/api/nearest', { method: 'POST', body: JSON.stringify({ Pos: [lat, long], type: types[type] }), headers: { 'content-type': 'application/json' } })
 
     return await res.json()
+  }
+
+  formData (details) {
+    const formBody = []
+    for (const property in details) {
+      const encodedKey = encodeURIComponent(property)
+      const encodedValue = encodeURIComponent(details[property])
+      formBody.push(encodedKey + '=' + encodedValue)
+    }
+    return formBody.join('&')
   }
 }
 export default REST
